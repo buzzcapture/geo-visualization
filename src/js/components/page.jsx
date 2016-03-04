@@ -1125,7 +1125,7 @@ const response = [
             ]
 
         },
-        amount: 25
+        amount: 35
     }
 
 ];
@@ -1177,9 +1177,11 @@ export default React.createClass({
       });
 
       function getColor(amount) {
+          // calculate percentage based on the highest amount - the baseline (lowest amount)
           var percentage = Math.round(((amount - lowestAmount) / (highestAmount - lowestAmount) * 100));
           console.log(percentage);
 
+              //============Linear================
               if(percentage > 80) {
                   return "#bd0026";
               } else if(percentage > 60) {
@@ -1192,8 +1194,47 @@ export default React.createClass({
                   return "#ffffb2";
               }
 
+          //===============Improvised Log============
+          //if(percentage > 95) {
+          //    return "#bd0026";
+          //} else if(percentage > 85) {
+          //    return "#f03b20";
+          //} else if(percentage > 65) {
+          //    return "#fd8d3c";
+          //} else if (percentage > 40) {
+          //    return "#fecc5c";
+          //} else {
+          //    return "#ffffb2";
+          //}
+
           }
       //===============End Color Stuff=====================
+
+      function highlightPolygon(e){
+          var layer = e.target;
+
+          layer.setStyle({
+              weight: 5,
+              color: '#666',
+              dashArray: '',
+              fillOpacity: 0.7
+          });
+
+          if (!L.Browser.ie && !L.Browser.opera) {
+              layer.bringToFront();
+          }
+      }
+
+      function resetHighlightPolygon(e){
+          var layer = e.target;
+          layer.setStyle({
+              weight: 2,
+              opacity: 1,
+              color: 'white',
+              dashArray: '3',
+              fillOpacity: 0.7
+          });
+      }
 
 
       /* *
@@ -1215,6 +1256,8 @@ export default React.createClass({
               fillOpacity: 0.7
           });
           polygon.bindPopup("<b>" + response.amount + "</b>", {closeButton: false, minWidth: 0});
+          polygon.on("mouseover", highlightPolygon);
+          polygon.on("mouseout", resetHighlightPolygon)
 
           map.addLayer( polygon );
       })
