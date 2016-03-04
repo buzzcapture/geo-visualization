@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Map, TileLayer, Polygon } from 'react-leaflet';
+import "leaflet";
 const response = [
     {
         polygon: {
@@ -1123,7 +1123,9 @@ const response = [
                     ]
                 ]
             ]
-        }
+
+        },
+        amount: 25
     }
 
 ];
@@ -1135,16 +1137,86 @@ export default React.createClass({
   componentDidMount: function(){
       map = L.map("map").setView([52.374030, 4.8896900], 7);
       L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ3ZpZG8iLCJhIjoiZGI1NmFhNmViNzZlZGNkMjQ3ZjdlMjVkZTMwNmFkNmEifQ.wnMrAkxOObDfpS1-KvPkqw').addTo(map);
-// Add the geoFeature to the map.
-//      L.geoJson(geoJsonFeatures).addTo(map);
 
+      //Colour codes from least intense to most intense
+      //#ffffb2
+      //#fecc5c
+      //#fd8d3c
+      //#f03b20
+      //#bd0026
+
+      //================Color Stuff===================
+      /*
+      * How this works right now:
+      * Get the max amount and min amount from the result.
+      * The Max will be 100 % and the min will be 0%
+      * Calculate the other percentages against the max (reduced by min)
+      * Get the color (linear right now)
+      * **/
+      var lowestAmount;
+      var highestAmount;
+      response.forEach(function(response){
+          // Set the initial value
+          if(typeof lowestAmount == "undefined") {
+              lowestAmount = response.amount;
+          } else {
+              // Check if there is a lower value in the list
+              lowestAmount = Math.min(lowestAmount, response.amount)
+          }
+
+          // Set in initial value
+          if(typeof highestAmount == "undefined") {
+              highestAmount = response.amount;
+          } else {
+              // Check if there is a higher value in the list
+              highestAmount = Math.max(highestAmount, response.amount)
+          }
+
+
+
+      });
+
+      function getColor(amount) {
+          var percentage = Math.round(((amount - lowestAmount) / (highestAmount - lowestAmount) * 100));
+          console.log(percentage);
+
+              if(percentage > 80) {
+                  return "#bd0026";
+              } else if(percentage > 60) {
+                  return "#f03b20";
+              } else if(percentage > 40) {
+                  return "#fd8d3c";
+              } else if (percentage > 20) {
+                  return "#fecc5c";
+              } else {
+                  return "#ffffb2";
+              }
+
+          }
+      //===============End Color Stuff=====================
+
+
+      /* *
+      * This is temporary.
+      * Leaflet uses LatLong and GeoJSON uses LongLat.
+      * This piece of code switches the coordinates.
+      * */
       response.forEach(function(response){
           var coordinates = [[]];
           response.polygon.coordinates[0].forEach(function(coords){
               coordinates[0].push(new L.latLng(coords[1], coords[0]))
           });
+          var polygon = L.polygon(coordinates, {
+              fillColor: getColor(response.amount),
+              weight: 2,
+              opacity: 1,
+              color: 'white',
+              dashArray: '3',
+              fillOpacity: 0.7
+          });
+          polygon.bindPopup("<b>" + response.amount + "</b>", {closeButton: false, minWidth: 0});
 
-          map.addLayer(new L.Polygon(coordinates));
+          map.addLayer( polygon );
       })
 
 
