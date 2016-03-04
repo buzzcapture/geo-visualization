@@ -1178,9 +1178,13 @@ export default React.createClass({
       * Calculate the other percentages against the max (reduced by min)
       * Get the color (linear right now)
       * **/
+      var mean = 0;
+      var variance = 0;
       var lowestAmount;
       var highestAmount;
+      var standardDeviation;
       response.features.forEach(function(response){
+          mean += response.properties.amount;
           // Set the initial value
           if(typeof lowestAmount == "undefined") {
               lowestAmount = response.properties.amount;
@@ -1198,6 +1202,17 @@ export default React.createClass({
           }
 
       });
+
+      mean = (mean / response.features.length);
+
+      response.features.forEach(function(response) {
+          variance += (Math.pow((mean - response.properties.amount), 2))
+      });
+
+      variance = variance / response.features.length;
+      standardDeviation = Math.sqrt(variance);
+      console.log(standardDeviation);
+
 
       function getColor(amount) {
           // calculate percentage based on the highest amount - the baseline (lowest amount)
