@@ -9,7 +9,7 @@ const response = {
     [
         {
             "type": "Feature",
-            "properties": {"amount" : 450},
+            "properties": {"amount" : 100000},
             "geometry" : {
                     "type": "Polygon",
                     "coordinates": [
@@ -108,7 +108,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 395},
+            "properties": {"amount" : 50000},
             "geometry" : {
                     "type": "Polygon",
                     "coordinates": [
@@ -195,7 +195,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 350},
+            "properties": {"amount" : 10000},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -306,7 +306,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 320},
+            "properties": {"amount" : 15000},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -377,7 +377,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 285},
+            "properties": {"amount" : 75000},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -464,7 +464,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 250},
+            "properties": {"amount" : 36000},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -543,7 +543,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 175},
+            "properties": {"amount" : 35000},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -622,7 +622,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 150},
+            "properties": {"amount" : 12500},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -689,7 +689,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 125},
+            "properties": {"amount" : 75000},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -788,7 +788,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 100},
+            "properties": {"amount" : 100000},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -891,7 +891,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 50},
+            "properties": {"amount" : 0},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -1026,7 +1026,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 35},
+            "properties": {"amount" : 100},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -1184,52 +1184,76 @@ export default React.createClass({
       var highestAmount;
       var standardDeviation;
       response.features.forEach(function(response){
+          //Get the total amount of postings
           mean += response.properties.amount;
-          // Set the initial value
-          if(typeof lowestAmount == "undefined") {
-              lowestAmount = response.properties.amount;
-          } else {
-              // Check if there is a lower value in the list
-              lowestAmount = Math.min(lowestAmount, response.properties.amount)
-          }
-
-          // Set in initial value
-          if(typeof highestAmount == "undefined") {
-              highestAmount = response.properties.amount;
-          } else {
-              // Check if there is a higher value in the list
-              highestAmount = Math.max(highestAmount, response.properties.amount)
-          }
-
       });
-
+      // Get the mean
       mean = (mean / response.features.length);
 
       response.features.forEach(function(response) {
+          //===========The old way============
+          //if(typeof highestAmount == "undefined") {
+          //    highestAmount = response.properties.amount;
+          //} else {
+          //    highestAmount = Math.max(highestAmount, response.properties.amount);
+          //}
+          //
+          //if(typeof lowestAmount == "undefined") {
+          //    lowestAmount = response.properties.amount;
+          //} else {
+          //    lowestAmount = Math.min(lowestAmount, response.properties.amount);
+          //}
+
           variance += (Math.pow((mean - response.properties.amount), 2))
       });
-
+      // Calculate the variance
       variance = variance / response.features.length;
+      // Get the standard deviation
       standardDeviation = Math.sqrt(variance);
-      console.log(standardDeviation);
+
+      lowestAmount = mean - standardDeviation;
+      highestAmount = mean + standardDeviation;
+
+      console.log("Mean:" + mean);
+      console.log("Deviation: " + standardDeviation);
+      console.log("Lowest:" + lowestAmount);
+      console.log("Highest:" + highestAmount);
 
 
       function getColor(amount) {
-          // calculate percentage based on the highest amount - the baseline (lowest amount)
-          var percentage = Math.round(((amount - lowestAmount) / (highestAmount - lowestAmount) * 100));
+          /*
+           #ffffb2
+           #fed976
+           #feb24c
+           #fd8d3c
+           #fc4e2a
+           #e31a1c
+           #b10026
+
+           */
+
+          if(amount < lowestAmount) {
+              return "#ffffb2"
+          } else if(amount > highestAmount) {
+              return "#b10026"
+          } else {
+              // calculate percentage based on the highest amount - the baseline (lowest amount)
+              var percentage = Math.round(((amount - lowestAmount) / (highestAmount - lowestAmount) * 100));
 
               //============Linear================
               if(percentage > 80) {
-                  return "#bd0026";
+                  return "#e31a1c";
               } else if(percentage > 60) {
-                  return "#f03b20";
+                  return "#fc4e2a";
               } else if(percentage > 40) {
                   return "#fd8d3c";
               } else if (percentage > 20) {
-                  return "#fecc5c";
+                  return "#feb24c";
               } else {
-                  return "#ffffb2";
+                  return "#fed976";
               }
+          }
+
           }
       //===============End Color Stuff=====================
 
@@ -1266,10 +1290,15 @@ export default React.createClass({
           info.update();
       }
 
+      function zoomToFeature(e) {
+          map.fitBounds(e.target.getBounds());
+      }
+
       function onEachFeature(feature, layer) {
           layer.on({
               mouseover: highlightFeature,
-              mouseout: resetHighlightFeature
+              mouseout: resetHighlightFeature,
+              click: zoomToFeature
           })
       }
 
