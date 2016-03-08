@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import "leaflet";
+import Map from "./map";
 
 
-const response = {
+const responsePolygon = {
     "type": "FeatureCollection",
     "features" :
     [
         {
             "type": "Feature",
-            "properties": {"amount" : 100000},
+            "properties": {"amount" : 10000},
             "geometry" : {
                     "type": "Polygon",
                     "coordinates": [
@@ -108,7 +109,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 50000},
+            "properties": {"amount" : 1000},
             "geometry" : {
                     "type": "Polygon",
                     "coordinates": [
@@ -195,7 +196,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 10000},
+            "properties": {"amount" : 378},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -306,7 +307,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 15000},
+            "properties": {"amount" : 145},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -377,7 +378,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 75000},
+            "properties": {"amount" : 547},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -464,7 +465,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 36000},
+            "properties": {"amount" : 343},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -543,7 +544,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 35000},
+            "properties": {"amount" : 900},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -622,7 +623,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 12500},
+            "properties": {"amount" : 482},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -689,7 +690,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 75000},
+            "properties": {"amount" : 545},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -788,7 +789,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 100000},
+            "properties": {"amount" : 164},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -891,7 +892,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 0},
+            "properties": {"amount" : 275},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -1026,7 +1027,7 @@ const response = {
         },
         {
             "type": "Feature",
-            "properties": {"amount" : 100},
+            "properties": {"amount" : 150},
             "geometry" : {
                 "type": "Polygon",
                 "coordinates": [
@@ -1147,175 +1148,228 @@ const response = {
 
     ]
 };
+const responsePoint = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": { amount: 150},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    4.866943359375,
+                    52.3688917060255
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": { amount: 100},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    4.691162109375,
+                    51.883272964437474
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": { amount: 75},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    5.6744384765625,
+                    52.05924589011585
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": { amount: 100},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    6.0809326171875,
+                    53.130294071906356
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {amount: 500},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    5.8447265625,
+                    51.334043778789415
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "amount": 150
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    6.3226318359375,
+                    52.51956352925745
+                ]
+            }
+        }
+    ]
+};
 
 var map = null;
 
 export default React.createClass({
 
-  componentDidMount: function(){
-      map = L.map("map").setView([52.374030, 4.8896900], 7);
-      L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ3ZpZG8iLCJhIjoiZGI1NmFhNmViNzZlZGNkMjQ3ZjdlMjVkZTMwNmFkNmEifQ.wnMrAkxOObDfpS1-KvPkqw').addTo(map);
-      var geojson;
-      var info = L.control();
-
-      info.onAdd = function (map) {
-          this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-          this.update();
-          return this._div;
-      };
-
-      info.update = function (props) {
-          this._div.innerHTML = '<h4>Amount of postings</h4>' +  (props ?
-              '<b>' + props.amount + '</b>' : 'Hover over a province');
-      };
-
-      info.addTo(map);
-      //================Color Stuff===================
-      /*
-      * How this works right now:
-      * Get the max amount and min amount from the result.
-      * The Max will be 100 % and the min will be 0%
-      * Calculate the other percentages against the max (reduced by min)
-      * Get the color (linear right now)
-      * **/
-      var mean = 0;
-      var variance = 0;
-      var lowestAmount;
-      var highestAmount;
-      var standardDeviation;
-      response.features.forEach(function(response){
-          //Get the total amount of postings
-          mean += response.properties.amount;
-      });
-      // Get the mean
-      mean = (mean / response.features.length);
-
-      response.features.forEach(function(response) {
-          //===========The old way============
-          //if(typeof highestAmount == "undefined") {
-          //    highestAmount = response.properties.amount;
-          //} else {
-          //    highestAmount = Math.max(highestAmount, response.properties.amount);
-          //}
-          //
-          //if(typeof lowestAmount == "undefined") {
-          //    lowestAmount = response.properties.amount;
-          //} else {
-          //    lowestAmount = Math.min(lowestAmount, response.properties.amount);
-          //}
-
-          variance += (Math.pow((mean - response.properties.amount), 2))
-      });
-      // Calculate the variance
-      variance = variance / response.features.length;
-      // Get the standard deviation
-      standardDeviation = Math.sqrt(variance);
-
-      lowestAmount = mean - standardDeviation;
-      highestAmount = mean + standardDeviation;
-
-      console.log("Mean:" + mean);
-      console.log("Deviation: " + standardDeviation);
-      console.log("Lowest:" + lowestAmount);
-      console.log("Highest:" + highestAmount);
-
-
-      function getColor(amount) {
-          /*
-           #ffffb2
-           #fed976
-           #feb24c
-           #fd8d3c
-           #fc4e2a
-           #e31a1c
-           #b10026
-
-           */
-
-          if(amount < lowestAmount) {
-              return "#ffffb2"
-          } else if(amount > highestAmount) {
-              return "#b10026"
-          } else {
-              // calculate percentage based on the highest amount - the baseline (lowest amount)
-              var percentage = Math.round(((amount - lowestAmount) / (highestAmount - lowestAmount) * 100));
-
-              //============Linear================
-              if(percentage > 80) {
-                  return "#e31a1c";
-              } else if(percentage > 60) {
-                  return "#fc4e2a";
-              } else if(percentage > 40) {
-                  return "#fd8d3c";
-              } else if (percentage > 20) {
-                  return "#feb24c";
-              } else {
-                  return "#fed976";
-              }
-          }
-
-          }
-      //===============End Color Stuff=====================
-
-
-
-      function style(feature) {
-          return ({
-              fillColor: getColor(feature.properties.amount),
-              weight: 2,
-              opacity: 1,
-              color: 'white',
-              dashArray: '3',
-              fillOpacity: 0.7
-          })}
-
-
-      function highlightFeature(e){
-          var layer = e.target;
-          info.update(layer.feature.properties);
-
-          layer.setStyle({
-              weight: 5,
-              color: '#666',
-              dashArray: ''
-          });
-
-          if (!L.Browser.ie && !L.Browser.opera) {
-              layer.bringToFront();
-          }
-      }
-
-      function resetHighlightFeature(e){
-          geojson.resetStyle(e.target);
-          info.update();
-      }
-
-      function zoomToFeature(e) {
-          map.fitBounds(e.target.getBounds());
-      }
-
-      function onEachFeature(feature, layer) {
-          layer.on({
-              mouseover: highlightFeature,
-              mouseout: resetHighlightFeature,
-              click: zoomToFeature
-          })
-      }
-
-      geojson = L.geoJson(response, {style: style,
-        onEachFeature: onEachFeature}).addTo(map);
-
-
-  },
-
-  shouldComponentUpdate: function(){
-      return(false)
-  },
-
+  //componentDidMount: function(){
+  //    map = L.map("map").setView([52.374030, 4.8896900], 7);
+  //    L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ3ZpZG8iLCJhIjoiZGI1NmFhNmViNzZlZGNkMjQ3ZjdlMjVkZTMwNmFkNmEifQ.wnMrAkxOObDfpS1-KvPkqw').addTo(map);
+  //    var geojson;
+  //    var info = L.control();
+  //
+  //    info.onAdd = function (map) {
+  //        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+  //        this.update();
+  //        return this._div;
+  //    };
+  //
+  //    info.update = function (props) {
+  //        this._div.innerHTML = '<h4>Amount of postings</h4>' +  (props ?
+  //            '<b>' + props.amount + '</b>' : 'Hover over a province');
+  //    };
+  //
+  //    info.addTo(map);
+  //    //================Color Stuff===================
+  //    var mean,
+  //        lowestAmount, // the lowest amount of postings
+  //        highestAmount, // the highest amount of postings
+  //        standardDeviation, // the standard deviation
+  //        values = [], // all of the values from the response, used for working with the values easier;
+  //        trimmedValues = []; // the values after being trimmed
+  //
+  //    response.features.forEach(function(response){
+  //        values.push(response.properties.amount); // Get all the postings amount from the response
+  //    });
+  //
+  //    mean = getMean(values);
+  //    standardDeviation = getStandardDeviation(values, mean);
+  //
+  //    // get a box to use for number trimming
+  //    lowestAmount = mean - standardDeviation;
+  //    highestAmount = mean + standardDeviation;
+  //
+  //    console.log("High: " + highestAmount +
+  //    " low: " + lowestAmount);
+  //    // trim the numbers
+  //    for(var i = 0; i < values.length; i++) {
+  //        if(lowestAmount < values[i] && highestAmount > values[i]){
+  //            trimmedValues.push(values[i]);
+  //        }
+  //    }
+  //
+  //    //get the new lowest and highest posting amounts
+  //    lowestAmount = Math.min(...trimmedValues);
+  //    highestAmount = Math.max(...trimmedValues);
+  //
+  //    console.log("High: " + highestAmount +
+  //        " low: " + lowestAmount);
+  //
+  //    function getColor(amount) {
+  //        /*
+  //         colors from colorbrewer2.org
+  //         #ffffb2
+  //         #fed976
+  //         #feb24c
+  //         #fd8d3c
+  //         #fc4e2a
+  //         #e31a1c
+  //         #b10026
+  //         */
+  //
+  //        // if the number is lower than the lowest posting amount in the trimmed list assign it a special color
+  //        if(amount < lowestAmount) {
+  //            return "#ffffb2";
+  //        // if the number is higher that the highest posting amount in the trimmed list assign it a special color
+  //        } else if(amount > highestAmount) {
+  //            return "#b10026";
+  //        } else {
+  //            // calculate percentage based on the highest amount - the baseline (lowest amount)
+  //            var percentage = Math.round(((amount - lowestAmount) / (highestAmount - lowestAmount) * 100));
+  //
+  //            //============Linear================
+  //            if(percentage < 20) {
+  //                return "#fed976";
+  //            } else if(percentage < 40) {
+  //                return "#feb24c";
+  //            } else if(percentage < 60) {
+  //                return "#fd8d3c";
+  //            } else if (percentage < 80) {
+  //                return "#fc4e2a";
+  //            } else {
+  //                return "#e31a1c";
+  //            }
+  //        }
+  //
+  //        }
+  //    //===============End Color Stuff=====================
+  //
+  //    function style(feature) {
+  //        return ({
+  //            fillColor: getColor(feature.properties.amount),
+  //            weight: 2,
+  //            opacity: 1,
+  //            color: 'white',
+  //            dashArray: '3',
+  //            fillOpacity: 0.7
+  //        })}
+  //
+  //    function highlightFeature(e){
+  //        var layer = e.target;
+  //        info.update(layer.feature.properties);
+  //
+  //        layer.setStyle({
+  //            weight: 5,
+  //            color: '#666',
+  //            dashArray: ''
+  //        });
+  //
+  //        if (!L.Browser.ie && !L.Browser.opera) {
+  //            layer.bringToFront();
+  //        }
+  //    }
+  //
+  //    function resetHighlightFeature(e){
+  //        geojson.resetStyle(e.target);
+  //        info.update();
+  //    }
+  //
+  //    function zoomToFeature(e) {
+  //        map.fitBounds(e.target.getBounds());
+  //    }
+  //
+  //    function onEachFeature(feature, layer) {
+  //        layer.on({
+  //            mouseover: highlightFeature,
+  //            mouseout: resetHighlightFeature,
+  //            click: zoomToFeature
+  //        })
+  //    }
+  //
+  //    geojson = L.geoJson(response, {style: style,
+  //      onEachFeature: onEachFeature}).addTo(map);
+  //
+  //},
 
   render: function () {
     return (
-        <div id="map"></div>
+        <div>
+            <Map data={responsePoint} id="map"/>
+        </div>
     );
   }
 
