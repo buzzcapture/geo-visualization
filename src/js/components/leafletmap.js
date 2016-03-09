@@ -48,15 +48,10 @@ LeafletMap.prototype = {
     },
 
     update: function (data) {
-        var bounds = this.getBounds(data.features);
+        this.postingBounds = this.getBounds(data.features);
 
-        this.geojson = L.geoJson(data//, {
-            // Only use this when using polygons
-            //style: this.getStyle.bind(this, bounds),
-            //onEachFeature: this.onFeature.bind(this)
-            //}
-            , {
-                onEachFeature: this.onFeature.bind(this)
+        this.geojson = L.geoJson(data, {
+                pointToLayer: this.pointToLayer.bind(this)
             }
         ).addTo(this.map);
     },
@@ -119,27 +114,9 @@ LeafletMap.prototype = {
     },
 
     highlightFeature: function (e) {
-        var layer = e.target;
-        // Polygon
-        //layer.setStyle({
-        //    weight: 5,
-        //    color: 'white',
-        //    dashArray: ''
-        //});
-        //
-        //if (!L.Browser.ie && !L.Browser.opera) {
-        //    layer.bringToFront();
-        //}
     },
 
     onFeature: function (feature, layer) {
-        // Polygon
-        //layer.on({
-        //    mouseover: this.highlightFeature.bind(this),
-        //    mouseout: this.resetHighlightFeature.bind(this),
-        //    click: this.zoomToFeature.bind(this)
-        //})
-
         layer.bindPopup("<b>" + feature.properties.amount + "</b>", {closeButton: false, minWidth: 0});
     },
 
@@ -149,6 +126,22 @@ LeafletMap.prototype = {
 
     zoomToFeature: function (e) {
         this.map.fitBounds(e.target.getBounds());
+    },
+
+    pointToLayer: function(feature, latlng) {
+        var divText, iconWidth, iconHeight, icon, color, style;
+        color = this.getColor(this.options.baseColor, feature.properties.amount, this.postingBounds);
+        divText = feature.properties.amount.toString();
+        iconWidth = 5 * divText.length + 10;
+        iconHeight = 16;
+        style = 'style="text-align: center; background-color:' + color + '"';
+        console.log(style);
+        icon = L.divIcon({iconSize: [iconWidth, iconHeight],
+            iconAnchor: [iconWidth/2, iconHeight/2],
+            className: "custom-leaflet-marker",
+            html: "<div " + style + "><b>" + feature.properties.amount + "</b></div>"});
+
+        return (L.marker(latlng,{icon: icon}));
     },
 
     destroy: function () {

@@ -22,3 +22,11 @@ body {
   margin: 0 0 5px;
   color: #777;
 }
+
+.custom-leaflet-marker {
+  overflow: hidden;
+  color: white;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}
