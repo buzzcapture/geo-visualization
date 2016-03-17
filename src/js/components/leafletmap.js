@@ -49,6 +49,10 @@ LeafletMap.prototype = {
 
     update: function (data) {
         this.postingBounds = this.getBounds(data.features);
+        // If the geojson layer already exists remove it first before adding the new one.
+        if(this.map.hasLayer(this.geojson)){
+            this.map.removeLayer(this.geojson);
+        }
 
         this.geojson = L.geoJson(data, {
                 pointToLayer: this.pointToLayer.bind(this)
@@ -113,19 +117,9 @@ LeafletMap.prototype = {
         return color.lighten(1 - (100 / slices * percentage / 100)).hexString();
     },
 
-    highlightFeature: function (e) {
-    },
 
     onFeature: function (feature, layer) {
         layer.bindPopup("<b>" + feature.properties.amount + "</b>", {closeButton: false, minWidth: 0});
-    },
-
-    resetHighlightFeature: function (e) {
-        this.geojson.resetStyle(e.target);
-    },
-
-    zoomToFeature: function (e) {
-        this.map.fitBounds(e.target.getBounds());
     },
 
     pointToLayer: function(feature, latlng) {
@@ -135,9 +129,8 @@ LeafletMap.prototype = {
         iconWidth = 5 * divText.length + 10;
         iconHeight = 16;
         style = 'style="text-align: center; background-color:' + color + '"';
-        console.log(style);
-        icon = L.divIcon({iconSize: [iconWidth, iconHeight],
-            iconAnchor: [iconWidth/2, iconHeight/2],
+        icon = L.divIcon({iconSize: [iconWidth, iconWidth],
+            iconAnchor: [iconWidth/2, iconWidth/2],
             className: "custom-leaflet-marker",
             html: "<div " + style + "><b>" + feature.properties.amount + "</b></div>"});
 
