@@ -13,7 +13,7 @@ export default React.createClass({
 
     getInitialState: function () {
       return {
-          accuracy: 2
+          accuracy: 6 //
       }
     },
 
@@ -25,6 +25,7 @@ export default React.createClass({
         this.map = LeafletMap.create(this.props.id);
         this.map.update(this.props.data);
         this.map.map.on("moveend", _.debounce(this.onUpdate, 1000))
+        this.setAccuracy(this.map.map.getZoom());
 
     },
 
@@ -36,12 +37,31 @@ export default React.createClass({
         this.map.update(nextProps.data);
     },
 
+    setAccuracy: function(zoom){
+        var accuracy;
+        if(zoom <= 7) {
+            accuracy = 3
+        } else if(zoom <= 9) {
+            accuracy = 4
+        } else if( zoom <= 12) {
+            accuracy = 5
+        } else if (zoom <= 13) {
+            accuracy = 6
+        } else {
+            accuracy = 6
+        }
+
+        this.setState({
+            accuracy: accuracy
+        })
+    },
+
     onUpdate: function(event){
         // You will call the function from this.props.{function} here.
         // Calculate the accuracy based on the zoom level and pass it to the api.
         // The response data should come in the form of new props. See componentWillReceiveProps
-        var map = event.target;
-        console.log(map.getZoom());
+        this.setAccuracy(this.map.map.getZoom());
+        console.log(this.state.accuracy);
     },
 
     render: function () {
