@@ -1,15 +1,15 @@
 {
-  "name": "react-es6-starter-kit",
+  "name": "geo-visualization",
   "version": "0.0.1",
   "description": "A simple starter kit for your React project.",
   "author": "Sandor Kocsis <kocsissandor85@gmail.com>",
   "scripts": {
     "watch": "gulp watch"
   },
-  "main": "index.js",
+  "main": "src/js/components/map.jsx",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kocsissandor85/react-es6-starter-kit.git"
+    "url": "https://github.com/stijnveken/geo-visualization.git"
   },
   "keywords": [
     "react",
@@ -29,6 +29,7 @@
     "gulp-watch": "^4.3.1",
     "gulp-webserver": "^0.9.1",
     "immstruct": "^2.0.0",
+    "leaflet": "^0.7.7 ",
     "lodash": "^4.6.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
