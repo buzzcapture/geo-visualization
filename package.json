@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "gulp watch"
   },
-  "main": "src/js/components/map.jsx",
+  "main": "dist/map.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/stijnveken/geo-visualization.git"
@@ -22,6 +22,7 @@
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "gulp-sass": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.3",

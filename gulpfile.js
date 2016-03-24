@@ -2,7 +2,7 @@
 
 var _, watchify, browserify, babelify,
     gulp, source, buffer, gutil, sourcemaps,
-    watch, sass, uglify, webserver,
+    watch, sass, uglify, webserver, babel,
 
     customOptions, options, bundler;
 
@@ -13,6 +13,7 @@ browserify = require("browserify");
 babelify = require("babelify");
 
 gulp = require("gulp");
+babel = require("gulp-babel");
 webserver = require("gulp-webserver");
 uglify = require("gulp-uglify");
 gutil = require("gulp-util");
@@ -40,6 +41,7 @@ bundler.transform(babelify);
 
 gulp.task("watch", ["css", "html"], function() {
   bundle();
+  bundleComponent();
 
   gulp.watch("./src/styles/**/*.scss", ["css"]);
   gulp.watch("./src/html/index.html", ["html"]);
@@ -50,10 +52,11 @@ gulp.task("html", html);
 gulp.task("runserver", runserver);
 
 bundler.on("update", bundle);
+bundler.on("update", bundleComponent);
 bundler.on("log", gutil.log);
 
 function runserver () {
-  gulp.src("./dist")
+  gulp.src("./demo")
       .pipe(webserver({
         fallback: "index.html",
         livereload: true
@@ -63,7 +66,7 @@ function runserver () {
 function html () {
   return gulp.src("./src/html/**/*.html")
     .on("log", gutil.log)
-    .pipe(gulp.dest("./dist"));
+    .pipe(gulp.dest("./demo"));
 }
 
 function css () {
@@ -71,7 +74,16 @@ function css () {
     .on("log", gutil.log)
     .on("error", gutil.log.bind(gutil, "CSS Error"))
     .pipe(sass())
-    .pipe(gulp.dest("./dist/css"));
+    .pipe(gulp.dest("./demo/css"));
+}
+
+function bundleComponent () {
+  return gulp.src([
+                "src/js/components/map.jsx",
+                "src/js/components/leafletmap.js"
+              ])
+             .pipe(babel())
+             .pipe(gulp.dest("./dist"));
 }
 
 function bundle () {
@@ -85,5 +97,5 @@ function bundle () {
     //.pipe(uglify())
 
     .pipe(sourcemaps.write("./", { debug: true }))
-    .pipe(gulp.dest("./dist/js"));
+    .pipe(gulp.dest("./demo/js"));
 }
