@@ -65,6 +65,6 @@ export default React.createClass({
     },
 
     render: function () {
-        return (<div ref="container" id={this.props.id}></div>)
+        return (<div ref="container" id={this.props.id} className="geo-visualization-chart"></div>)
     }
 })
