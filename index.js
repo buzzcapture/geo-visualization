@@ -1,1 +1,1 @@
-module.exports = require('./src/js/router.jsx');
+module.exports = require('./src/js/components/map.jsx');
