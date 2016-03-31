@@ -50084,6 +50084,7 @@ exports.default = LeafletMap;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.Map = undefined;
 
 var _react = require("react");
 
@@ -50099,8 +50100,8 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _react2.default.createClass({
-    displayName: "ReactMapComponent",
+var Map = exports.Map = _react2.default.createClass({
+    displayName: "GeoVisualizationReactComponent",
 
     propTypes: {
         data: _react2.default.PropTypes.object,

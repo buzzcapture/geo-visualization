@@ -2,8 +2,8 @@ import React from "react";
 import LeafletMap from "./leafletmap";
 import _ from "lodash";
 
-export default React.createClass({
-    displayName: "ReactMapComponent",
+export var Map = React.createClass({
+    displayName: "GeoVisualizationReactComponent",
 
     propTypes: {
         data: React.PropTypes.object,
