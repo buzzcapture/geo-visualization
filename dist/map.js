@@ -43,7 +43,7 @@ exports.default = _react2.default.createClass({
   },
 
   componentDidMount: function componentDidMount() {
-    this.map = _leafletmap2.default.create(this.props.id);
+    this.map = _leafletmap2.default.create(this.props.id, _lodash2.default.pick(this.props, "colorSlices"));
     this.map.update(this.props.data);
     this.map.map.on("moveend", _lodash2.default.debounce(this.onUpdate, 1000));
   },

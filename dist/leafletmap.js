@@ -45,6 +45,7 @@ LeafletMap.prototype = {
     this.options = _lodash2.default.assign({
       zoom: 6,
       center: [52.374030, 4.8896900],
+      colorSlices: 5,
       baseColor: "#A32020"
     }, options);
 
@@ -98,7 +99,7 @@ LeafletMap.prototype = {
     lowestAmount = mean - standardDeviation;
     highestAmount = mean + standardDeviation;
 
-    console.log("High:", highestAmount, "Low:", lowestAmount);
+    // console.log("High:", highestAmount, "Low:", lowestAmount);
 
     trimmedValues = _lodash2.default.filter(values, function (value) {
       return lowestAmount < value && highestAmount > value;
@@ -123,7 +124,7 @@ LeafletMap.prototype = {
     total = Math.max(bounds.highest - bounds.lowest, 1);
     part = amount - bounds.lowest;
 
-    slices = 5; // Temporary, will be provided by the user.
+    slices = this.options.colorSlices; // Temporary, will be provided by the user.
     offset = 100 / slices;
 
     // Calculate the percentage
