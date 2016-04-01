@@ -3,7 +3,7 @@ import LeafletMap from "./leafletmap";
 import _ from "lodash";
 
 export default React.createClass({
-    displayName: "GeoVisualizationReactComponent",
+    displayName: "Geo Visualization React Component",
 
     propTypes: {
         data: React.PropTypes.object,

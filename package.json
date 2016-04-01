@@ -1,10 +1,9 @@
 {
   "name": "geo-visualization",
   "version": "0.0.1",
-  "description": "A simple starter kit for your React project.",
-  "author": "Sandor Kocsis <kocsissandor85@gmail.com>",
+  "author": "Stijn Veken",
   "scripts": {
-    "watch": "gulp watch"
+    "build": "gulp build"
   },
   "main": "dist/map.js",
   "repository": {
@@ -23,21 +22,12 @@
     "browserify": "^13.0.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
-    "gulp-sass": "^2.2.0",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
-    "gulp-watch": "^4.3.1",
-    "gulp-webserver": "^0.9.1",
-    "immstruct": "^2.0.0",
     "leaflet": "^0.7.7 ",
     "lodash": "^4.6.0",
     "react": "^0.13.3",
-    "react-router": "^2.0.0",
-    "reflux": "^0.3.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.0.7",
     "color": "^0.11.1"
   },
   "devDependencies": {},
