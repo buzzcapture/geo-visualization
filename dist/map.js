@@ -80,6 +80,6 @@ exports.default = _react2.default.createClass({
     },
 
     render: function render() {
-        return _react2.default.createElement("div", { ref: "container", id: this.props.id });
+        return _react2.default.createElement("div", { ref: "container", id: this.props.id, className: "geo-visualization-chart" });
     }
 });
