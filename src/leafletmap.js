@@ -25,6 +25,7 @@ LeafletMap.prototype = {
     this.options = _.assign({
       zoom: 6,
       center: [52.374030, 4.8896900],
+      colorSlices: 5,
       baseColor: "#A32020"
     }, options);
 
@@ -50,7 +51,7 @@ LeafletMap.prototype = {
       this.map.removeLayer(this.geojson);
     }
 
-    if (this.data.features.length) {
+    if (data.features.length) {
       this.postingBounds = this.getBounds(data.features);
 
       this.geojson = L.geoJson(data, {
@@ -77,7 +78,7 @@ LeafletMap.prototype = {
     lowestAmount = mean - standardDeviation;
     highestAmount = mean + standardDeviation;
 
-    console.log("High:", highestAmount, "Low:", lowestAmount);
+    // console.log("High:", highestAmount, "Low:", lowestAmount);
 
     trimmedValues = _.filter(values, value => lowestAmount < value && highestAmount > value);
 
@@ -94,13 +95,13 @@ LeafletMap.prototype = {
   getColor: function (baseColor, amount, bounds) {
     var total, part, color, offset, percentage, slices;
 
-    // Make the color with the baseColor
     color = Color(baseColor);
 
     // variables for the percentage calculation
-    total = bounds.highest - bounds.lowest;
+    total = Math.max(bounds.highest - bounds.lowest, 1);
     part = amount - bounds.lowest;
-    slices = 5; // Temporary, will be provided by the user.
+
+    slices = this.options.colorSlices; // Temporary, will be provided by the user.
     offset = 100 / slices;
 
     // Calculate the percentage
@@ -109,13 +110,8 @@ LeafletMap.prototype = {
     percentage = Math.min(Math.max(percentage, 0), 100);
     // Get the the color brackets the percentage is in
     percentage = Math.floor(percentage / offset);
-    // 1 - (100 / slices * percentage / 100)
-    // 1 to invert the result
-    // 100 / slices to get the percentage per slice
-    // * percent The total percentage
-    // / 100 to get it between 0-1
 
-    return color.lighten(1 - (100 / slices * percentage / 100)).hexString();
+    return color.lighten(1 - (percentage / slices)).hexString();
   },
 
   pointToLayer: function (feature, latlng) {

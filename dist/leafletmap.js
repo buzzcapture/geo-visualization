@@ -70,7 +70,7 @@ LeafletMap.prototype = {
       this.map.removeLayer(this.geojson);
     }
 
-    if (this.data.features.length) {
+    if (data.features.length) {
       this.postingBounds = this.getBounds(data.features);
 
       this.geojson = _leaflet2.default.geoJson(data, {
@@ -117,12 +117,12 @@ LeafletMap.prototype = {
   getColor: function getColor(baseColor, amount, bounds) {
     var total, part, color, offset, percentage, slices;
 
-    // Make the color with the baseColor
     color = (0, _color2.default)(baseColor);
 
     // variables for the percentage calculation
-    total = bounds.highest - bounds.lowest;
+    total = Math.max(bounds.highest - bounds.lowest, 1);
     part = amount - bounds.lowest;
+
     slices = 5; // Temporary, will be provided by the user.
     offset = 100 / slices;
 
@@ -132,13 +132,8 @@ LeafletMap.prototype = {
     percentage = Math.min(Math.max(percentage, 0), 100);
     // Get the the color brackets the percentage is in
     percentage = Math.floor(percentage / offset);
-    // 1 - (100 / slices * percentage / 100)
-    // 1 to invert the result
-    // 100 / slices to get the percentage per slice
-    // * percent The total percentage
-    // / 100 to get it between 0-1
 
-    return color.lighten(1 - 100 / slices * percentage / 100).hexString();
+    return color.lighten(1 - percentage / slices).hexString();
   },
 
   pointToLayer: function pointToLayer(feature, latlng) {

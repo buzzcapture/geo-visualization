@@ -1,7 +1,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _react = require("react");
@@ -19,67 +19,68 @@ var _lodash2 = _interopRequireDefault(_lodash);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _react2.default.createClass({
-    displayName: "Geo Visualization React Component",
+  displayName: "Geo Visualization React Component",
 
-    propTypes: {
-        data: _react2.default.PropTypes.object,
-        id: _react2.default.PropTypes.string,
-        onZoom: _react2.default.PropTypes.func
-    },
+  propTypes: {
+    id: _react2.default.PropTypes.string.isRequired,
+    data: _react2.default.PropTypes.object,
+    onMove: _react2.default.PropTypes.func
+  },
 
-    getInitialState: function getInitialState() {
-        return {
-            accuracy: 6 //
-        };
-    },
+  getDefaultProps: function getDefaultProps() {
+    return {
+      colorSlices: 5,
+      onMove: function onMove() {},
+      data: {
+        type: "FeatureCollection",
+        features: []
+      }
+    };
+  },
 
-    shouldComponentUpdate: function shouldComponentUpdate() {
-        return false;
-    },
+  shouldComponentUpdate: function shouldComponentUpdate() {
+    return false;
+  },
 
-    componentDidMount: function componentDidMount() {
-        this.map = _leafletmap2.default.create(this.props.id);
-        this.map.update(this.props.data);
-        this.map.map.on("moveend", _lodash2.default.debounce(this.onUpdate, 1000));
-        this.setAccuracy(this.map.map.getZoom());
-    },
+  componentDidMount: function componentDidMount() {
+    this.map = _leafletmap2.default.create(this.props.id);
+    this.map.update(this.props.data);
+    this.map.map.on("moveend", _lodash2.default.debounce(this.onUpdate, 1000));
+  },
 
-    componentWillUnmount: function componentWillUnmount() {
-        this.map.destroy();
-    },
+  componentWillUnmount: function componentWillUnmount() {
+    this.map.destroy();
+  },
 
-    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-        this.map.update(nextProps.data);
-    },
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    this.map.update(nextProps.data);
+  },
 
-    setAccuracy: function setAccuracy(zoom) {
-        var accuracy;
-        if (zoom <= 7) {
-            accuracy = 3;
-        } else if (zoom <= 9) {
-            accuracy = 4;
-        } else if (zoom <= 12) {
-            accuracy = 5;
-        } else if (zoom <= 13) {
-            accuracy = 6;
-        } else {
-            accuracy = 6;
-        }
+  getPrecision: function getPrecision(zoom) {
+    var precision;
 
-        this.setState({
-            accuracy: accuracy
-        });
-    },
-
-    onUpdate: function onUpdate(event) {
-        // You will call the function from this.props.{function} here.
-        // Calculate the accuracy based on the zoom level and pass it to the api.
-        // The response data should come in the form of new props. See componentWillReceiveProps
-        this.setAccuracy(this.map.map.getZoom());
-        console.log(this.state.accuracy);
-    },
-
-    render: function render() {
-        return _react2.default.createElement("div", { ref: "container", id: this.props.id, className: "geo-visualization-chart" });
+    if (zoom <= 7) {
+      precision = 3;
+    } else if (zoom <= 9) {
+      precision = 4;
+    } else if (zoom <= 12) {
+      precision = 5;
+    } else if (zoom <= 13) {
+      precision = 6;
+    } else {
+      precision = 6;
     }
+
+    return precision;
+  },
+
+  onUpdate: function onUpdate() {
+    var zoom = this.map.map.getZoom();
+
+    this.props.onMove(this.getPrecision(zoom));
+  },
+
+  render: function render() {
+    return _react2.default.createElement("div", { ref: "container", id: this.props.id, className: "geo-visualization-chart" });
+  }
 });
