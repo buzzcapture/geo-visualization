@@ -76,12 +76,15 @@ exports.default = _react2.default.createClass({
 
   onUpdate: function onUpdate() {
     var zoom = this.map.map.getZoom();
-    var bounds = {};
+    var bounds = {
+      "top_left": {},
+      "bottom_right": {}
+    };
     var leafletBounds = this.map.map.getBounds();
-    bounds.topLeft = leafletBounds.getNorthWest();
-    bounds.bottomRight = leafletBounds.getSouthEast();
-
-    console.log(bounds);
+    bounds.top_left.lat = leafletBounds.getNorthWest().lat;
+    bounds.top_left.lon = leafletBounds.getNorthWest().lng;
+    bounds.bottom_right.lat = leafletBounds.getSouthEast().lat;
+    bounds.bottom_right.lon = leafletBounds.getSouthEast().lng;
 
     this.props.onMove(this.getPrecision(zoom), bounds);
   },
