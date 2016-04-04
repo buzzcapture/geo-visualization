@@ -60,8 +60,14 @@ export default React.createClass({
 
   onUpdate: function () {
     var zoom = this.map.map.getZoom();
+    var bounds = {};
+    var leafletBounds = this.map.map.getBounds();
+    bounds.topLeft = leafletBounds.getNorthWest();
+    bounds.bottomRight = leafletBounds.getSouthEast();
 
-    this.props.onMove(this.getPrecision(zoom));
+    console.log(bounds);
+
+    this.props.onMove(this.getPrecision(zoom), bounds);
   },
 
   render: function () {

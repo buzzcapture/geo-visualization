@@ -76,8 +76,14 @@ exports.default = _react2.default.createClass({
 
   onUpdate: function onUpdate() {
     var zoom = this.map.map.getZoom();
+    var bounds = {};
+    var leafletBounds = this.map.map.getBounds();
+    bounds.topLeft = leafletBounds.getNorthWest();
+    bounds.bottomRight = leafletBounds.getSouthEast();
 
-    this.props.onMove(this.getPrecision(zoom));
+    console.log(bounds);
+
+    this.props.onMove(this.getPrecision(zoom), bounds);
   },
 
   render: function render() {
