@@ -40,25 +40,24 @@ export default React.createClass({
     this.map.update(nextProps.data);
   },
 
-  getPrecision: function (zoom) {
+  getPrecision: function getPrecision(zoom) {
     var precision;
 
-    if (zoom <= 7) {
-      precision = 3
-    } else if (zoom <= 9) {
-      precision = 4
+    if (zoom <= 5) {
+      precision = 3;
+    } else if (zoom <= 8) {
+      precision = 4;
+    } else if (zoom <= 10) {
+      precision = 5;
     } else if (zoom <= 12) {
-      precision = 5
-    } else if (zoom <= 13) {
-      precision = 6
+      precision = 6;
     } else {
-      precision = 6
+      precision = 7;
     }
-
     return precision;
   },
 
-  onUpdate: function () {
+  onUpdate: function onUpdate() {
     var zoom = this.map.map.getZoom();
     var bounds = {
       "top_left": {
@@ -73,6 +72,7 @@ export default React.createClass({
     bounds.top_left.lon = leafletBounds.getNorthWest().lng;
     bounds.bottom_right.lat = leafletBounds.getSouthEast().lat;
     bounds.bottom_right.lon = leafletBounds.getSouthEast().lng;
+
 
     this.props.onMove(this.getPrecision(zoom), bounds);
   },

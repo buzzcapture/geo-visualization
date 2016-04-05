@@ -59,18 +59,17 @@ exports.default = _react2.default.createClass({
   getPrecision: function getPrecision(zoom) {
     var precision;
 
-    if (zoom <= 7) {
+    if (zoom <= 5) {
       precision = 3;
-    } else if (zoom <= 9) {
+    } else if (zoom <= 8) {
       precision = 4;
-    } else if (zoom <= 12) {
+    } else if (zoom <= 10) {
       precision = 5;
-    } else if (zoom <= 13) {
+    } else if (zoom <= 12) {
       precision = 6;
     } else {
-      precision = 6;
+      precision = 7;
     }
-
     return precision;
   },
 
