@@ -114,8 +114,13 @@ LeafletMap.prototype = {
     return color.lighten(1 - (percentage / slices)).hexString();
   },
 
+  getDistance: function (from = [], to = []) {
+    return Math.round(L.latLng.apply(L, from.reverse()).distanceTo(L.latLng.apply(L, to.reverse()))) || 0.01;
+  },
+
   pointToLayer: function (feature, latlng) {
-    var divText, iconWidth, icon, color, style, html, marker, radius;
+    var divText, iconWidth, icon, color,
+        style, html, marker, radius;
 
     color = this.getColor(this.options.baseColor, feature.properties.amount, this.postingBounds);
     divText = feature.properties.amount.toString();
@@ -135,6 +140,8 @@ LeafletMap.prototype = {
       icon: icon
     });
 
+    radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);
+
     marker.on("click", this.options.onIconClick.bind(null, feature, _.assign({}, latlng), radius));
 
     return marker;
@@ -150,3 +157,16 @@ LeafletMap.create = function () {
 };
 
 export default LeafletMap;
+
+
+
+
+
+
+
+
+
+
+
+
+

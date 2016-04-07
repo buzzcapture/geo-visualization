@@ -137,6 +137,13 @@ LeafletMap.prototype = {
     return color.lighten(1 - percentage / slices).hexString();
   },
 
+  getDistance: function getDistance() {
+    var from = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+    var to = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
+    return Math.round(_leaflet2.default.latLng.apply(_leaflet2.default, from.reverse()).distanceTo(_leaflet2.default.latLng.apply(_leaflet2.default, to.reverse())));
+  },
+
   pointToLayer: function pointToLayer(feature, latlng) {
     var divText, iconWidth, icon, color, style, html, marker, radius;
 
@@ -157,6 +164,8 @@ LeafletMap.prototype = {
     marker = _leaflet2.default.marker(latlng, {
       icon: icon
     });
+
+    radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);
 
     marker.on("click", this.options.onIconClick.bind(null, feature, _lodash2.default.assign({}, latlng), radius));
 
