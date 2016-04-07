@@ -20,8 +20,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var TILE_LAYER_URL = 'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ3ZpZG8iLCJhIjoiZGI1NmFhNmViNzZlZGNkMjQ3ZjdlMjVkZTMwNmFkNmEifQ.wnMrAkxOObDfpS1-KvPkqw';
-
+var TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'; // CartoDB Tiles
 var Utils = {
   getStandardDeviation: function getStandardDeviation(values, mean) {
     var variance = 0;
@@ -51,7 +50,7 @@ LeafletMap.prototype = {
 
     this.map = _leaflet2.default.map(id).setView(this.options.center, this.options.zoom);
 
-    _leaflet2.default.tileLayer(TILE_LAYER_URL).addTo(this.map);
+    _leaflet2.default.tileLayer(TILE_LAYER_URL, { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>' }).addTo(this.map);
   },
 
   getStyle: function getStyle(bounds, feature) {
