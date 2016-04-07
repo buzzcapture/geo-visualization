@@ -2,8 +2,7 @@ import _ from "lodash";
 import Color from "color";
 import L from "leaflet";
 
-const TILE_LAYER_URL = 'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZ3ZpZG8iLCJhIjoiZGI1NmFhNmViNzZlZGNkMjQ3ZjdlMjVkZTMwNmFkNmEifQ.wnMrAkxOObDfpS1-KvPkqw'
-
+const TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'; // CartoDB Tiles
 var Utils = {
   getStandardDeviation: function getStandardDeviation (values, mean) {
     var variance = 0;
@@ -32,7 +31,7 @@ LeafletMap.prototype = {
 
     this.map = L.map(id).setView(this.options.center, this.options.zoom);
 
-    L.tileLayer(TILE_LAYER_URL).addTo(this.map);
+    L.tileLayer(TILE_LAYER_URL, {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'}).addTo(this.map);
   },
 
   getStyle: function (bounds, feature) {
