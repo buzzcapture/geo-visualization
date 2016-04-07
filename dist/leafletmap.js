@@ -46,7 +46,8 @@ LeafletMap.prototype = {
       zoom: 6,
       center: [52.374030, 4.8896900],
       colorSlices: 5,
-      baseColor: "#A32020"
+      baseColor: "#A32020",
+      onIconClick: function onIconClick() {}
     }, options);
 
     this.map = _leaflet2.default.map(id).setView(this.options.center, this.options.zoom);
@@ -138,23 +139,29 @@ LeafletMap.prototype = {
   },
 
   pointToLayer: function pointToLayer(feature, latlng) {
-    var divText, iconWidth, iconHeight, icon, color, style;
+    var divText, iconWidth, icon, color, style, html, marker, radius;
 
     color = this.getColor(this.options.baseColor, feature.properties.amount, this.postingBounds);
     divText = feature.properties.amount.toString();
     iconWidth = 5 * divText.length + 10;
-    style = 'style="text-align: center; background-color:' + color + '"';
+
+    style = "style=\"text-align: center; background-color: " + color + ";\"";
+    html = "<div " + style + "><b>" + feature.properties.amount + "</b></div>";
 
     icon = _leaflet2.default.divIcon({
       iconSize: [iconWidth, iconWidth],
       iconAnchor: [iconWidth / 2, iconWidth / 2],
       className: "custom-leaflet-marker",
-      html: "<div " + style + "><b>" + feature.properties.amount + "</b></div>"
+      html: html
     });
 
-    return _leaflet2.default.marker(latlng, {
+    marker = _leaflet2.default.marker(latlng, {
       icon: icon
     });
+
+    marker.on("click", this.options.onIconClick.bind(null, feature, _lodash2.default.assign({}, latlng), radius));
+
+    return marker;
   },
 
   destroy: function destroy() {}

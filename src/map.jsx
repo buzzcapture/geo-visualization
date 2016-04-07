@@ -8,13 +8,15 @@ export default React.createClass({
   propTypes: {
     id: React.PropTypes.string.isRequired,
     data: React.PropTypes.object,
-    onMove: React.PropTypes.func
+    onMove: React.PropTypes.func,
+    onIconClick: React.PropTypes.func
   },
 
   getDefaultProps: function () {
     return {
       colorSlices: 5,
       onMove: function () {},
+      onIconClick: function () {},
       data: {
         type: "FeatureCollection",
         features: []
@@ -27,7 +29,9 @@ export default React.createClass({
   },
 
   componentDidMount: function () {
-    this.map = LeafletMap.create(this.props.id, _.pick(this.props, "colorSlices"));
+    var mapOptions = _.pick(this.props, "colorSlices", "onIconClick");
+
+    this.map = LeafletMap.create(this.props.id, mapOptions);
     this.map.update(this.props.data);
     this.map.map.on("moveend", _.debounce(this.onUpdate, 1000));
   },
@@ -58,21 +62,21 @@ export default React.createClass({
   },
 
   onUpdate: function onUpdate() {
-    var zoom = this.map.map.getZoom();
-    var bounds = {
-      "top_left": {
+    var zoom, bounds, leafletBounds;
 
-      },
-      "bottom_right": {
+    zoom = this.map.map.getZoom();
 
-      }
+    bounds = {
+      top_left: {},
+      bottom_right: {}
     };
-    var leafletBounds = this.map.map.getBounds();
+
+    leafletBounds = this.map.map.getBounds();
+
     bounds.top_left.lat = leafletBounds.getNorthWest().lat;
     bounds.top_left.lon = leafletBounds.getNorthWest().lng;
     bounds.bottom_right.lat = leafletBounds.getSouthEast().lat;
     bounds.bottom_right.lon = leafletBounds.getSouthEast().lng;
-
 
     this.props.onMove(this.getPrecision(zoom), bounds);
   },
