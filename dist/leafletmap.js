@@ -22,6 +22,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 // CartoDB Tiles  https://cartodb.com/basemaps/
 var TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
+var attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
 var Utils = {
   getStandardDeviation: function getStandardDeviation(values, mean) {
     var variance = 0;
@@ -52,7 +53,20 @@ LeafletMap.prototype = {
 
     this.map = _leaflet2.default.map(id).setView(this.options.center, this.options.zoom);
 
-    _leaflet2.default.tileLayer(TILE_LAYER_URL, { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>' }).addTo(this.map);
+    _leaflet2.default.tileLayer(TILE_LAYER_URL, { attribution: attribution }).addTo(this.map);
+
+    this.map.on("locationfound", this.onLocationFound.bind(this));
+    this.map.on("locationerror", this.onLocationError.bind(this));
+    // Get the user location and set it as the center of the map.
+    this.map.locate();
+  },
+
+  onLocationFound: function onLocationFound(ev) {
+    this.map.setView(ev.latlng);
+  },
+
+  onLocationError: function onLocationError(ev) {
+    window.alert("Getting location failed.");
   },
 
   getStyle: function getStyle(bounds, feature) {
