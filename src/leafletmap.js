@@ -2,7 +2,8 @@ import _ from "lodash";
 import Color from "color";
 import L from "leaflet";
 
-const TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'; // CartoDB Tiles
+// CartoDB Tiles  https://cartodb.com/basemaps/
+const TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
 var Utils = {
   getStandardDeviation: function getStandardDeviation (values, mean) {
     var variance = 0;
@@ -56,7 +57,7 @@ LeafletMap.prototype = {
 
       this.geojson = L.geoJson(data, {
         pointToLayer: this.pointToLayer.bind(this)
-      }).addTo(this.map);
+      }).addTo(this.map)
     }
   },
 
@@ -120,8 +121,9 @@ LeafletMap.prototype = {
 
   pointToLayer: function (feature, latlng) {
     var divText, iconWidth, icon, color,
-        style, html, marker, radius;
+        style, html, marker, radius, className, options;
 
+    className = "custom-leaflet-marker";
     color = this.getColor(this.options.baseColor, feature.properties.amount, this.postingBounds);
     divText = feature.properties.amount.toString();
     iconWidth = 5 * divText.length + 10;
@@ -129,10 +131,15 @@ LeafletMap.prototype = {
     style = `style="text-align: center; background-color: ${color};"`;
     html = `<div ${style}><b>${feature.properties.amount}</b></div>`;
 
+    // if the icon is selected use an other class.
+    if(feature.properties.isSelected) {
+      className = "custom-leaflet-marker custom-leaflet-marker-selected"
+    }
+
     icon = L.divIcon({
       iconSize: [iconWidth, iconWidth],
       iconAnchor: [iconWidth / 2, iconWidth / 2],
-      className: "custom-leaflet-marker",
+      className: className,
       html: html
     });
 
@@ -143,6 +150,10 @@ LeafletMap.prototype = {
     radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);
 
     marker.on("click", this.options.onIconClick.bind(null, feature, _.assign({}, latlng), radius));
+
+    if(feature.properties.isSelected) {
+      marker.setZIndexOffset(1000)
+    }
 
     return marker;
   },

@@ -20,7 +20,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'; // CartoDB Tiles
+// CartoDB Tiles  https://cartodb.com/basemaps/
+var TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
 var Utils = {
   getStandardDeviation: function getStandardDeviation(values, mean) {
     var variance = 0;
@@ -141,12 +142,13 @@ LeafletMap.prototype = {
     var from = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
     var to = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
 
-    return Math.round(_leaflet2.default.latLng.apply(_leaflet2.default, from.reverse()).distanceTo(_leaflet2.default.latLng.apply(_leaflet2.default, to.reverse())));
+    return Math.round(_leaflet2.default.latLng.apply(_leaflet2.default, from.reverse()).distanceTo(_leaflet2.default.latLng.apply(_leaflet2.default, to.reverse()))) || 0.01;
   },
 
   pointToLayer: function pointToLayer(feature, latlng) {
-    var divText, iconWidth, icon, color, style, html, marker, radius;
+    var divText, iconWidth, icon, color, style, html, marker, radius, className, options;
 
+    className = "custom-leaflet-marker";
     color = this.getColor(this.options.baseColor, feature.properties.amount, this.postingBounds);
     divText = feature.properties.amount.toString();
     iconWidth = 5 * divText.length + 10;
@@ -154,10 +156,15 @@ LeafletMap.prototype = {
     style = "style=\"text-align: center; background-color: " + color + ";\"";
     html = "<div " + style + "><b>" + feature.properties.amount + "</b></div>";
 
+    // if the icon is selected use an other class.
+    if (feature.properties.isSelected) {
+      className = "custom-leaflet-marker custom-leaflet-marker-selected";
+    }
+
     icon = _leaflet2.default.divIcon({
       iconSize: [iconWidth, iconWidth],
       iconAnchor: [iconWidth / 2, iconWidth / 2],
-      className: "custom-leaflet-marker",
+      className: className,
       html: html
     });
 
@@ -168,6 +175,10 @@ LeafletMap.prototype = {
     radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);
 
     marker.on("click", this.options.onIconClick.bind(null, feature, _lodash2.default.assign({}, latlng), radius));
+
+    if (feature.properties.isSelected) {
+      marker.setZIndexOffset(1000);
+    }
 
     return marker;
   },
