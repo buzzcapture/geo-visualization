@@ -25,7 +25,8 @@ exports.default = _react2.default.createClass({
     id: _react2.default.PropTypes.string.isRequired,
     data: _react2.default.PropTypes.object,
     onMove: _react2.default.PropTypes.func,
-    onIconClick: _react2.default.PropTypes.func
+    onIconClick: _react2.default.PropTypes.func,
+    onDeselect: _react2.default.PropTypes.func
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -33,6 +34,7 @@ exports.default = _react2.default.createClass({
       colorSlices: 5,
       onMove: function onMove() {},
       onIconClick: function onIconClick() {},
+      onDeselect: function onDeselect() {},
       data: {
         type: "FeatureCollection",
         features: []
@@ -45,7 +47,7 @@ exports.default = _react2.default.createClass({
   },
 
   componentDidMount: function componentDidMount() {
-    var mapOptions = _lodash2.default.pick(this.props, "colorSlices", "onIconClick");
+    var mapOptions = _lodash2.default.pick(this.props, "colorSlices", "onIconClick", "onDeselect");
 
     this.leafletMap = _leafletmap2.default.create(this.props.id, mapOptions);
     this.leafletMap.update(this.props.data);

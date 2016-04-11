@@ -3,9 +3,11 @@ import Color from "color";
 import L from "leaflet";
 
 // CartoDB Tiles  https://cartodb.com/basemaps/
-const TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
-const attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
-var center = [52.374030, 4.8896900]; // Amsterdam
+const TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+const ATTRIBUTION = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+const AMSTERDAM = [52.374030, 4.8896900]; // Amsterdam
+const SELECTED_MARKER_CLASSNAME = "custom-leaflet-marker-selected";
+
 var Utils = {
   getStandardDeviation: function getStandardDeviation (values, mean) {
     var variance = 0;
@@ -29,13 +31,14 @@ LeafletMap.prototype = {
       center: [52.374030, 4.8896900],
       colorSlices: 5,
       baseColor: "#A32020",
-      onIconClick: function () {}
+      onIconClick: function () {},
+      onDeselect: function () {}
     }, options);
 
 
 
     this.map = L.map(id).setView(this.options.center, this.options.zoom);
-    L.tileLayer(TILE_LAYER_URL, {attribution: attribution}).addTo(this.map);
+    L.tileLayer(TILE_LAYER_URL, {attribution: ATTRIBUTION}).addTo(this.map);
 
   },
 
@@ -123,11 +126,35 @@ LeafletMap.prototype = {
     return Math.round(L.latLng.apply(L, from.reverse()).distanceTo(L.latLng.apply(L, to.reverse()))) || 0.01;
   },
 
+  onIconClick: function (feature, latlng, radius, evt) {
+    var clicked, selected;
+
+    clicked = evt.target;
+    selected = clicked === this.selectedMarker;
+
+    this.toggleMarkerSelected(this.selectedMarker, { on: false });
+
+    if (selected) {
+      this.selectedMarker = null;
+    } else {
+      this.selectedMarker = evt.target;
+      this.toggleMarkerSelected(this.selectedMarker, { on: true });
+      this.selectedMarker.setZIndexOffset(1000);
+    }
+
+    this.options[selected ? "onDeselect" : "onIconClick"](feature, latlng, radius, evt);
+  },
+
+  toggleMarkerSelected: function (marker, options = { on: true }) {
+    if (marker && marker._icon) {
+      marker._icon.classList[options.on ? "add" : "remove"](SELECTED_MARKER_CLASSNAME);
+    }
+  },
+
   pointToLayer: function (feature, latlng) {
     var divText, iconWidth, icon, color,
         style, html, marker, radius, className, options;
 
-    className = "custom-leaflet-marker";
     color = this.getColor(this.options.baseColor, feature.properties.amount, this.postingBounds);
     divText = feature.properties.amount.toString();
     iconWidth = 5 * divText.length + 10;
@@ -136,9 +163,7 @@ LeafletMap.prototype = {
     html = `<div ${style}><b>${feature.properties.amount}</b></div>`;
 
     // if the icon is selected use an other class.
-    if(feature.properties.isSelected) {
-      className = "custom-leaflet-marker custom-leaflet-marker-selected"
-    }
+    className = `custom-leaflet-marker ${feature.properties.isSelected ? SELECTED_MARKER_CLASSNAME : ""}`;
 
     icon = L.divIcon({
       iconSize: [iconWidth, iconWidth],
@@ -152,11 +177,11 @@ LeafletMap.prototype = {
     });
 
     radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);
-
-    marker.on("click", this.options.onIconClick.bind(null, feature, _.assign({}, latlng), radius));
+    marker.on("click", this.onIconClick.bind(this, feature, _.assign({}, latlng), radius));
 
     if(feature.properties.isSelected) {
-      marker.setZIndexOffset(1000)
+      marker.setZIndexOffset(1000);
+      this.selectedMarker = marker;
     }
 
     return marker;

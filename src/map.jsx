@@ -9,7 +9,8 @@ export default React.createClass({
     id: React.PropTypes.string.isRequired,
     data: React.PropTypes.object,
     onMove: React.PropTypes.func,
-    onIconClick: React.PropTypes.func
+    onIconClick: React.PropTypes.func,
+    onDeselect: React.PropTypes.func
   },
 
   getDefaultProps: function () {
@@ -17,6 +18,7 @@ export default React.createClass({
       colorSlices: 5,
       onMove: function () {},
       onIconClick: function () {},
+      onDeselect: function () {},
       data: {
         type: "FeatureCollection",
         features: []
@@ -29,7 +31,7 @@ export default React.createClass({
   },
 
   componentDidMount: function () {
-    var mapOptions = _.pick(this.props, "colorSlices", "onIconClick");
+    var mapOptions = _.pick(this.props, "colorSlices", "onIconClick", "onDeselect");
 
     this.leafletMap = LeafletMap.create(this.props.id, mapOptions);
     this.leafletMap.update(this.props.data);
