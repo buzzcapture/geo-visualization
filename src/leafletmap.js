@@ -5,6 +5,7 @@ import L from "leaflet";
 // CartoDB Tiles  https://cartodb.com/basemaps/
 const TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
 const attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+var center = [52.374030, 4.8896900]; // Amsterdam
 var Utils = {
   getStandardDeviation: function getStandardDeviation (values, mean) {
     var variance = 0;
@@ -31,22 +32,11 @@ LeafletMap.prototype = {
       onIconClick: function () {}
     }, options);
 
-    this.map = L.map(id).setView(this.options.center, this.options.zoom);
 
+
+    this.map = L.map(id).setView(this.options.center, this.options.zoom);
     L.tileLayer(TILE_LAYER_URL, {attribution: attribution}).addTo(this.map);
 
-    this.map.on("locationfound", this.onLocationFound.bind(this));
-    this.map.on("locationerror", this.onLocationError.bind(this));
-    // Get the user location and set it as the center of the map.
-    this.map.locate();
-  },
-
-  onLocationFound: function(ev) {
-    this.map.setView(ev.latlng)
-  },
-
-  onLocationError: function(ev) {
-    window.alert("Getting location failed.")
   },
 
   getStyle: function (bounds, feature) {
