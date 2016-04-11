@@ -47,17 +47,28 @@ exports.default = _react2.default.createClass({
   componentDidMount: function componentDidMount() {
     var mapOptions = _lodash2.default.pick(this.props, "colorSlices", "onIconClick");
 
-    this.map = _leafletmap2.default.create(this.props.id, mapOptions);
-    this.map.update(this.props.data);
-    this.map.map.on("moveend", _lodash2.default.debounce(this.onUpdate, 1000));
+    this.leafletMap = _leafletmap2.default.create(this.props.id, mapOptions);
+    this.leafletMap.update(this.props.data);
+    this.leafletMap.map.on("moveend", _lodash2.default.debounce(this.onUpdate, 1000));
+    this.leafletMap.map.on("locationfound", this.onLocationFound);
+    this.leafletMap.map.on("locationerror", this.onLocationError);
+    this.leafletMap.map.locate();
+  },
+
+  onLocationFound: function onLocationFound(ev) {
+    this.leafletMap.map.setView(ev.latlng);
+  },
+
+  onLocationError: function onLocationError() {
+    this.onUpdate();
   },
 
   componentWillUnmount: function componentWillUnmount() {
-    this.map.destroy();
+    this.leafletMap.destroy();
   },
 
   componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    this.map.update(nextProps.data);
+    this.leafletMap.update(nextProps.data);
   },
 
   getPrecision: function getPrecision(zoom) {
@@ -80,14 +91,14 @@ exports.default = _react2.default.createClass({
   onUpdate: function onUpdate() {
     var zoom, bounds, leafletBounds;
 
-    zoom = this.map.map.getZoom();
+    zoom = this.leafletMap.map.getZoom();
 
     bounds = {
       top_left: {},
       bottom_right: {}
     };
 
-    leafletBounds = this.map.map.getBounds();
+    leafletBounds = this.leafletMap.map.getBounds();
 
     bounds.top_left.lat = leafletBounds.getNorthWest().lat;
     bounds.top_left.lon = leafletBounds.getNorthWest().lng;

@@ -31,17 +31,29 @@ export default React.createClass({
   componentDidMount: function () {
     var mapOptions = _.pick(this.props, "colorSlices", "onIconClick");
 
-    this.map = LeafletMap.create(this.props.id, mapOptions);
-    this.map.update(this.props.data);
-    this.map.map.on("moveend", _.debounce(this.onUpdate, 1000));
+    this.leafletMap = LeafletMap.create(this.props.id, mapOptions);
+    this.leafletMap.update(this.props.data);
+    this.leafletMap.map.on("moveend", _.debounce(this.onUpdate, 1000));
+    this.leafletMap.map.on("locationfound", this.onLocationFound);
+    this.leafletMap.map.on("locationerror", this.onLocationError);
+    this.leafletMap.map.locate();
+  },
+  
+
+  onLocationFound: function(ev){
+    this.leafletMap.map.setView(ev.latlng);
+  },
+
+  onLocationError: function() {
+    this.onUpdate()
   },
 
   componentWillUnmount: function () {
-    this.map.destroy();
+    this.leafletMap.destroy();
   },
 
   componentWillReceiveProps: function (nextProps) {
-    this.map.update(nextProps.data);
+    this.leafletMap.update(nextProps.data);
   },
 
   getPrecision: function getPrecision(zoom) {
@@ -64,14 +76,14 @@ export default React.createClass({
   onUpdate: function onUpdate() {
     var zoom, bounds, leafletBounds;
 
-    zoom = this.map.map.getZoom();
+    zoom = this.leafletMap.map.getZoom();
 
     bounds = {
       top_left: {},
       bottom_right: {}
     };
 
-    leafletBounds = this.map.map.getBounds();
+    leafletBounds = this.leafletMap.map.getBounds();
 
     bounds.top_left.lat = leafletBounds.getNorthWest().lat;
     bounds.top_left.lon = leafletBounds.getNorthWest().lng;
