@@ -197,7 +197,8 @@ LeafletMap.prototype = {
     });
 
     marker = _leaflet2.default.marker(latlng, {
-      icon: icon
+      icon: icon,
+      riseOnHover: true
     });
 
     radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);
