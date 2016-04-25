@@ -59,6 +59,7 @@ exports.default = _react2.default.createClass({
 
   onLocationFound: function onLocationFound(ev) {
     this.leafletMap.map.setView(ev.latlng);
+    this.onUpdate();
   },
 
   onLocationError: function onLocationError() {
