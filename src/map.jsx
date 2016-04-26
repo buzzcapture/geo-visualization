@@ -44,7 +44,6 @@ export default React.createClass({
 
   onLocationFound: function(ev){
     this.leafletMap.map.setView(ev.latlng);
-    this.onUpdate();
   },
 
   onLocationError: function() {
