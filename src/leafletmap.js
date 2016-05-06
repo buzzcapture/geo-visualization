@@ -7,6 +7,7 @@ const TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.p
 const ATTRIBUTION = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
 const AMSTERDAM = [52.374030, 4.8896900]; // Amsterdam
 const SELECTED_MARKER_CLASSNAME = "custom-leaflet-marker-selected";
+var zIndex;
 
 var Utils = {
   getStandardDeviation: function getStandardDeviation (values, mean) {
@@ -60,6 +61,7 @@ LeafletMap.prototype = {
     }
 
     if (data.features.length) {
+      zIndex = data.features.length;
       this.postingBounds = this.getBounds(data.features);
 
       this.geojson = L.geoJson(data, {
@@ -173,7 +175,9 @@ LeafletMap.prototype = {
     });
 
     marker = L.marker(latlng, {
-      icon: icon
+      icon: icon,
+      riseOnHover: true,
+      zIndexOffset: zIndex--
     });
 
     radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);
