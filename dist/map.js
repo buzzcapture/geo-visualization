@@ -16,17 +16,17 @@ var _lodash = require("lodash");
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-exports.default = _react2.default.createClass({
+exports["default"] = _react2["default"].createClass({
   displayName: "Geo Visualization React Component",
 
   propTypes: {
-    id: _react2.default.PropTypes.string.isRequired,
-    data: _react2.default.PropTypes.object,
-    onMove: _react2.default.PropTypes.func,
-    onIconClick: _react2.default.PropTypes.func,
-    onDeselect: _react2.default.PropTypes.func
+    id: _react2["default"].PropTypes.string.isRequired,
+    data: _react2["default"].PropTypes.object,
+    onMove: _react2["default"].PropTypes.func,
+    onIconClick: _react2["default"].PropTypes.func,
+    onDeselect: _react2["default"].PropTypes.func
   },
 
   getDefaultProps: function getDefaultProps() {
@@ -47,11 +47,11 @@ exports.default = _react2.default.createClass({
   },
 
   componentDidMount: function componentDidMount() {
-    var mapOptions = _lodash2.default.pick(this.props, "colorSlices", "onIconClick", "onDeselect");
+    var mapOptions = _lodash2["default"].pick(this.props, "colorSlices", "onIconClick", "onDeselect");
 
-    this.leafletMap = _leafletmap2.default.create(this.props.id, mapOptions);
+    this.leafletMap = _leafletmap2["default"].create(this.props.id, mapOptions);
     this.leafletMap.update(this.props.data);
-    this.leafletMap.map.on("moveend", _lodash2.default.debounce(this.onUpdate, 1000));
+    this.leafletMap.map.on("moveend", _lodash2["default"].debounce(this.onUpdate, 1000));
     this.leafletMap.map.on("locationfound", this.onLocationFound);
     this.leafletMap.map.on("locationerror", this.onLocationError);
     this.leafletMap.map.locate();
@@ -111,6 +111,6 @@ exports.default = _react2.default.createClass({
   },
 
   render: function render() {
-    return _react2.default.createElement("div", { ref: "container", id: this.props.id, className: "geo-visualization-chart" });
+    return _react2["default"].createElement("div", { ref: "container", id: this.props.id, className: "geo-visualization-chart" });
   }
 });

@@ -16,7 +16,7 @@ var _leaflet = require("leaflet");
 
 var _leaflet2 = _interopRequireDefault(_leaflet);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -46,7 +46,7 @@ LeafletMap.prototype = {
   init: function init(id) {
     var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-    this.options = _lodash2.default.assign({
+    this.options = _lodash2["default"].assign({
       zoom: 6,
       center: [52.374030, 4.8896900],
       colorSlices: 5,
@@ -55,8 +55,8 @@ LeafletMap.prototype = {
       onDeselect: function onDeselect() {}
     }, options);
 
-    this.map = _leaflet2.default.map(id).setView(this.options.center, this.options.zoom);
-    _leaflet2.default.tileLayer(TILE_LAYER_URL, { attribution: ATTRIBUTION }).addTo(this.map);
+    this.map = _leaflet2["default"].map(id).setView(this.options.center, this.options.zoom);
+    _leaflet2["default"].tileLayer(TILE_LAYER_URL, { attribution: ATTRIBUTION }).addTo(this.map);
   },
 
   getStyle: function getStyle(bounds, feature) {
@@ -79,7 +79,7 @@ LeafletMap.prototype = {
     if (data.features.length) {
       this.postingBounds = this.getBounds(data.features);
 
-      this.geojson = _leaflet2.default.geoJson(data, {
+      this.geojson = _leaflet2["default"].geoJson(data, {
         pointToLayer: this.pointToLayer.bind(this)
       }).addTo(this.map);
     }
@@ -97,7 +97,7 @@ LeafletMap.prototype = {
       return values.push(item.properties.amount);
     });
 
-    mean = _lodash2.default.mean(values);
+    mean = _lodash2["default"].mean(values);
     standardDeviation = Utils.getStandardDeviation(values, mean);
 
     // get a box to use for number trimming
@@ -106,7 +106,7 @@ LeafletMap.prototype = {
 
     // console.log("High:", highestAmount, "Low:", lowestAmount);
 
-    trimmedValues = _lodash2.default.filter(values, function (value) {
+    trimmedValues = _lodash2["default"].filter(values, function (value) {
       return lowestAmount < value && highestAmount > value;
     });
 
@@ -123,7 +123,7 @@ LeafletMap.prototype = {
   getColor: function getColor(baseColor, amount, bounds) {
     var total, part, color, offset, percentage, slices;
 
-    color = (0, _color2.default)(baseColor);
+    color = (0, _color2["default"])(baseColor);
 
     // variables for the percentage calculation
     total = Math.max(bounds.highest - bounds.lowest, 1);
@@ -146,7 +146,7 @@ LeafletMap.prototype = {
     var from = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
     var to = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
 
-    return Math.round(_leaflet2.default.latLng.apply(_leaflet2.default, from.reverse()).distanceTo(_leaflet2.default.latLng.apply(_leaflet2.default, to.reverse()))) || 0.01;
+    return Math.round(_leaflet2["default"].latLng.apply(_leaflet2["default"], from.reverse()).distanceTo(_leaflet2["default"].latLng.apply(_leaflet2["default"], to.reverse()))) || 0.01;
   },
 
   onIconClick: function onIconClick(feature, latlng, radius, evt) {
@@ -189,19 +189,19 @@ LeafletMap.prototype = {
     // if the icon is selected use an other class.
     className = "custom-leaflet-marker " + (feature.properties.isSelected ? SELECTED_MARKER_CLASSNAME : "");
 
-    icon = _leaflet2.default.divIcon({
+    icon = _leaflet2["default"].divIcon({
       iconSize: [iconWidth, iconWidth],
       iconAnchor: [iconWidth / 2, iconWidth / 2],
       className: className,
       html: html
     });
 
-    marker = _leaflet2.default.marker(latlng, {
+    marker = _leaflet2["default"].marker(latlng, {
       icon: icon
     });
 
     radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);
-    marker.on("click", this.onIconClick.bind(this, feature, _lodash2.default.assign({}, latlng), radius));
+    marker.on("click", this.onIconClick.bind(this, feature, _lodash2["default"].assign({}, latlng), radius));
 
     if (feature.properties.isSelected) {
       marker.setZIndexOffset(1000);
@@ -218,4 +218,4 @@ LeafletMap.create = function () {
   return new (Function.prototype.bind.apply(LeafletMap, [null].concat(Array.prototype.slice.call(arguments))))();
 };
 
-exports.default = LeafletMap;
+exports["default"] = LeafletMap;
