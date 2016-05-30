@@ -8,7 +8,7 @@
   "main": "dist/map.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stijnveken/geo-visualization.git"
+    "url": "git+https://github.com/buzzcapture/geo-visualization.git"
   },
   "keywords": [
     "react",
