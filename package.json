@@ -2,6 +2,7 @@
   "name": "geo-visualization",
   "version": "0.0.1",
   "author": "Stijn Veken",
+  "private": true,
   "scripts": {
     "build": "gulp build"
   },
