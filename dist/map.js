@@ -8,6 +8,14 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _createReactClass = require("create-react-class");
+
+var _createReactClass2 = _interopRequireDefault(_createReactClass);
+
 var _leafletmap = require("./leafletmap");
 
 var _leafletmap2 = _interopRequireDefault(_leafletmap);
@@ -18,15 +26,15 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-exports["default"] = _react2["default"].createClass({
+exports["default"] = (0, _createReactClass2["default"])({
   displayName: "Geo Visualization React Component",
 
   propTypes: {
-    id: _react2["default"].PropTypes.string.isRequired,
-    data: _react2["default"].PropTypes.object,
-    onMove: _react2["default"].PropTypes.func,
-    onIconClick: _react2["default"].PropTypes.func,
-    onDeselect: _react2["default"].PropTypes.func
+    id: _propTypes2["default"].string.isRequired,
+    data: _propTypes2["default"].object,
+    onMove: _propTypes2["default"].func,
+    onIconClick: _propTypes2["default"].func,
+    onDeselect: _propTypes2["default"].func
   },
 
   getDefaultProps: function getDefaultProps() {
