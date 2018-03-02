@@ -25,6 +25,7 @@ var TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png
 var ATTRIBUTION = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
 var AMSTERDAM = [52.374030, 4.8896900]; // Amsterdam
 var SELECTED_MARKER_CLASSNAME = "custom-leaflet-marker-selected";
+var zIndex;
 
 var Utils = {
   getStandardDeviation: function getStandardDeviation(values, mean) {
@@ -44,7 +45,7 @@ var LeafletMap = function LeafletMap() {
 
 LeafletMap.prototype = {
   init: function init(id) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     this.options = _lodash2["default"].assign({
       zoom: 6,
@@ -77,6 +78,7 @@ LeafletMap.prototype = {
     }
 
     if (data.features.length) {
+      zIndex = data.features.length;
       this.postingBounds = this.getBounds(data.features);
 
       this.geojson = _leaflet2["default"].geoJson(data, {
@@ -143,8 +145,8 @@ LeafletMap.prototype = {
   },
 
   getDistance: function getDistance() {
-    var from = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-    var to = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+    var from = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var to = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
     return Math.round(_leaflet2["default"].latLng.apply(_leaflet2["default"], from.reverse()).distanceTo(_leaflet2["default"].latLng.apply(_leaflet2["default"], to.reverse()))) || 0.01;
   },
@@ -169,7 +171,7 @@ LeafletMap.prototype = {
   },
 
   toggleMarkerSelected: function toggleMarkerSelected(marker) {
-    var options = arguments.length <= 1 || arguments[1] === undefined ? { on: true } : arguments[1];
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { on: true };
 
     if (marker && marker._icon) {
       marker._icon.classList[options.on ? "add" : "remove"](SELECTED_MARKER_CLASSNAME);
@@ -197,7 +199,9 @@ LeafletMap.prototype = {
     });
 
     marker = _leaflet2["default"].marker(latlng, {
-      icon: icon
+      icon: icon,
+      riseOnHover: true,
+      zIndexOffset: zIndex--
     });
 
     radius = (this.getDistance(feature.geometry.coordinates, feature.properties.top_left) / 1000).toFixed(2);

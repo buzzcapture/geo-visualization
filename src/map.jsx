@@ -1,16 +1,18 @@
 import React from "react";
+import PropTypes from "prop-types";
+import createReactClass from "create-react-class";
 import LeafletMap from "./leafletmap";
 import _ from "lodash";
 
-export default React.createClass({
+export default createReactClass({
   displayName: "Geo Visualization React Component",
 
   propTypes: {
-    id: React.PropTypes.string.isRequired,
-    data: React.PropTypes.object,
-    onMove: React.PropTypes.func,
-    onIconClick: React.PropTypes.func,
-    onDeselect: React.PropTypes.func
+    id: PropTypes.string.isRequired,
+    data: PropTypes.object,
+    onMove: PropTypes.func,
+    onIconClick: PropTypes.func,
+    onDeselect: PropTypes.func
   },
 
   getDefaultProps: function () {
