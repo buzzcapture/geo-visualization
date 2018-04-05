@@ -1,6 +1,6 @@
 {
   "name": "geo-visualization",
-  "version": "0.0.2-bc",
+  "version": "0.0.4-bc",
   "author": "Stijn Veken",
   "private": true,
   "scripts": {
@@ -20,17 +20,17 @@
     "babel-plugin-transform-es3-member-expression-literals": "^6.8.0",
     "babel-plugin-transform-es3-property-literals": "^6.8.0",
     "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "6.5.0",
+    "babel-preset-react": "^6.5.0",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "color": "^0.11.1",
-    "create-react-class": "15.6.3",
+    "create-react-class": "^15.6.3",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-util": "^3.0.7",
     "leaflet": "^0.7.7 ",
     "lodash": "^4.6.0",
-    "prop-types": "15.6.0",
+    "prop-types": "^15.6.0",
     "react": ">0.13.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
