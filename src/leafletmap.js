@@ -3,7 +3,7 @@ import Color from "color";
 import L from "leaflet";
 
 // CartoDB Tiles  https://cartodb.com/basemaps/
-const TILE_LAYER_URL = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+const TILE_LAYER_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
 const ATTRIBUTION = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
 const AMSTERDAM = [52.374030, 4.8896900]; // Amsterdam
 const SELECTED_MARKER_CLASSNAME = "custom-leaflet-marker-selected";
